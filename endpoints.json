@@ -25,5 +25,40 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves a single article by its ID.",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "author": "Darth Vader",
+        "title": "How to start an Empire",
+        "article_id": 3,
+        "body": "This is part two of a series on establishing an empire from a single space station...",
+        "topic": "Galactic domination",
+        "created_at": "2084-11-07T00:00:00.000Z",
+        "votes": 100,
+        "article_img_url": "https://example.com/sithlord.jpg"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves all comments for a specific article",
+    "queries": [],
+    "params": {
+      "article_id": "The ID of the article for which to retrieve comments"
+    },
+    "exampleResponse": {
+      "comments[0]": [
+        {
+          "comment_id": 5,
+          "votes": 0,
+          "created_at": "2020-11-03T21:00:00.000Z",
+          "author": "icellusedkars",
+          "body": "I hate streaming noses",
+          "article_id": 1
+        }
+      ]
+    }
   }
 }
