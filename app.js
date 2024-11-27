@@ -5,6 +5,7 @@ const {
   getArticleById,
   getAllArticles,
   getArticleComments,
+  postComment,
 } = require("./controllers/articles.controller");
 const {
   routeNotFoundErrors,
@@ -13,6 +14,8 @@ const {
 } = require("./errors/errors");
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/api", getApi);
 
@@ -23,6 +26,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id/comments", getArticleComments);
+
+app.post("/api/articles/:article_id/comments", postComment);
 
 app.all("*", routeNotFoundErrors);
 app.use(handlePostgresErrors);

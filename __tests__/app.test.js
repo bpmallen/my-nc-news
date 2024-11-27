@@ -207,3 +207,53 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Responds with a newly created comment object", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "I saved a life. My own. Am I a hero? I really can’t say, but yes.",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: "I saved a life. My own. Am I a hero? I really can’t say, but yes.",
+            article_id: 1,
+            author: "butter_bridge",
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("404: Responds `username not found` if username does not exist", () => {
+    const newComment = {
+      username: "non_existent_user",
+      body: "I dont exist, but I wont't give up ",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Username not found");
+      });
+  });
+  test("400: Responds `Bad request` if username is missing", () => {
+    const newComment = {
+      body: "I dont exist, but I wont't give up ",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
