@@ -208,7 +208,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only("POST /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
   test("201: Responds with a newly created comment object", () => {
     const newComment = {
       username: "butter_bridge",
