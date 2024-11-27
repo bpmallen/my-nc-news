@@ -3,6 +3,7 @@ const {
   selectAllArticles,
   selectArticleComments,
   addComment,
+  alterVotesByArticleId,
 } = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {
@@ -43,6 +44,20 @@ exports.postComment = (req, res, next) => {
   addComment({ username, body }, article_id)
     .then((createdComment) => {
       res.status(201).send({ comment: createdComment });
+    })
+    .catch(next);
+};
+
+exports.patchVotesByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+  if (!inc_votes) {
+    return res.status(400).send({ msg: "Bad request" });
+  }
+  alterVotesByArticleId(article_id, inc_votes)
+    .then((updatedArticle) => {
+      console.log(updatedArticle);
+      res.status(200).send({ article: updatedArticle });
     })
     .catch(next);
 };
