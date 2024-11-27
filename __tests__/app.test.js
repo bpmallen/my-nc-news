@@ -257,3 +257,59 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Responds with the updated article when votes have been incremented", () => {
+    const addVotes = { inc_votes: 777 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(addVotes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            votes: 877,
+          })
+        );
+      });
+  });
+  test("200: Responds with the updated article when votes are decremented", () => {
+    const update = { inc_votes: -77 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(update)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.votes).toBe(23);
+      });
+  });
+  test("400: Responds with an error when inc_votes is invalid", () => {
+    const update = { inc_votes: "I_am_invalid" };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(update)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error when inc_votes is missing", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Responds with an error when article_id does not exist", () => {
+    const addVotes = { inc_votes: 777 };
+    return request(app)
+      .patch("/api/articles/777")
+      .send(addVotes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+});

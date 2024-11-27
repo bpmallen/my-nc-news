@@ -4,6 +4,7 @@ exports.routeNotFoundErrors = (req, res) => {
 
 exports.handlePostgresErrors = (err, req, res, next) => {
   // postgres errors
+
   if (err.code === "22P02") {
     res.status(400).send({ msg: "Bad request" });
   } else {

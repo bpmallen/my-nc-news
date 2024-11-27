@@ -6,6 +6,7 @@ const {
   getAllArticles,
   getArticleComments,
   postComment,
+  patchVotesByArticleId,
 } = require("./controllers/articles.controller");
 const {
   routeNotFoundErrors,
@@ -28,6 +29,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/articles/:article_id", patchVotesByArticleId);
 
 app.all("*", routeNotFoundErrors);
 app.use(handlePostgresErrors);
