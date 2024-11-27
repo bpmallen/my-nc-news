@@ -8,6 +8,7 @@ const {
   postComment,
   patchVotesByArticleId,
   deleteCommentById,
+  getUsers,
 } = require("./controllers/articles.controller");
 const {
   routeNotFoundErrors,
@@ -34,6 +35,8 @@ app.post("/api/articles/:article_id/comments", postComment);
 app.patch("/api/articles/:article_id", patchVotesByArticleId);
 
 app.delete("/api/comments/:comment_id", deleteCommentById);
+
+app.get("/api/users", getUsers);
 
 app.all("*", routeNotFoundErrors);
 app.use(handlePostgresErrors);

@@ -1,5 +1,5 @@
 exports.routeNotFoundErrors = (req, res) => {
-  res.status(404).send({ msg: "Not Found" });
+  res.status(404).send({ msg: "Route not found" });
 };
 
 exports.handlePostgresErrors = (err, req, res, next) => {

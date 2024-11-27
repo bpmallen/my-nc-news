@@ -54,7 +54,7 @@ describe("GET /api/topics", () => {
         .get("/api/i_dont_exist")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Not Found");
+          expect(body.msg).toBe("Route not found");
         });
     });
   });
@@ -332,6 +332,33 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: Responds with an array of user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toBeInstanceOf(Array);
+        expect(users.length).toBeGreaterThan(0);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+  test("404: Responds with an error for invalid route", () => {
+    return request(app)
+      .get("/api/you_can't_go_this_way")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
       });
   });
 });
