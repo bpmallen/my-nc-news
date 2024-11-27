@@ -1,0 +1,8 @@
+   username    |    name    
+---------------+------------
+ butter_bridge | jonny
+ icellusedkars | sam
+ rogersop      | paul
+ lurker        | do_nothing
+(4 rows)
+
