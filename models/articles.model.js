@@ -14,7 +14,7 @@ exports.selectArticleById = (article_id) => {
 exports.selectAllArticles = (query) => {
   const { author, topic, sort_by = "created_at", order = "DESC" } = query;
 
-  const validSortBys = [
+  const validColumns = [
     "title",
     "topic",
     "author",
@@ -23,7 +23,7 @@ exports.selectAllArticles = (query) => {
     "comment_count",
   ];
 
-  if (!validSortBys.includes(sort_by)) {
+  if (!validColumns.includes(sort_by)) {
     return Promise.reject({ status: 400, msg: "bad request" });
   }
 

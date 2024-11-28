@@ -118,49 +118,6 @@ describe("GET /api/articles", () => {
         });
       });
   });
-
-  test("200: Filters articles by author", () => {
-    return request(app)
-      .get("/api/articles?author=butter_bridge")
-      .expect(200)
-      .then(({ body: { articles } }) => {
-        expect(articles).toBeInstanceOf(Array);
-        expect(articles.length).toBeGreaterThan(0);
-
-        articles.forEach((article) => {
-          expect(article.author).toBe("butter_bridge");
-        });
-      });
-  });
-  test("200: Filters articles by topic", () => {
-    return request(app)
-      .get("/api/articles?topic=cats")
-      .expect(200)
-      .then(({ body: { articles } }) => {
-        expect(articles).toBeInstanceOf(Array);
-        expect(articles.length).toBeGreaterThan(0);
-
-        articles.forEach((article) => {
-          expect(article.topic).toBe("cats");
-        });
-      });
-  });
-  test("400: Responds with an error for invalid sort_by column", () => {
-    return request(app)
-      .get("/api/articles?sort_by=invalid_column")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("bad request");
-      });
-  });
-  test("400: Responds with an error for invalid order query", () => {
-    return request(app)
-      .get("/api/articles?order=invalid_query")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid order query");
-      });
-  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
@@ -359,6 +316,78 @@ describe("GET /api/users", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Route not found");
+      });
+  });
+});
+
+describe("GET /api/articles(sorting queries)", () => {
+  test("200: Responds with articles sorted by a valid `sort_by` parameter", () => {
+    return request(app)
+      .get("/api/articles?topic=valid_topic&sort_by=created_at")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("200: Filters articles by author", () => {
+    return request(app)
+      .get("/api/articles?author=butter_bridge")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeInstanceOf(Array);
+        expect(articles.length).toBeGreaterThan(0);
+
+        articles.forEach((article) => {
+          expect(article.author).toBe("butter_bridge");
+        });
+      });
+  });
+  test("200: Responds with an empty array if author does not exist", () => {
+    return request(app)
+      .get("/api/articles?author=author_never_existed")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toEqual([]);
+      });
+  });
+  test("200: Filters articles by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeInstanceOf(Array);
+        expect(articles.length).toBeGreaterThan(0);
+
+        articles.forEach((article) => {
+          expect(article.topic).toBe("cats");
+        });
+      });
+  });
+  test("200: Responds with an empty array if topic exists but has no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=topic_without_articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeInstanceOf(Array);
+        expect(articles).toEqual([]);
+        expect(articles).toHaveLength(0);
+      });
+  });
+  test("400: Responds with an error for invalid sort_by column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=invalid_column")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
+      });
+  });
+  test("400: Responds with an error for invalid order query", () => {
+    return request(app)
+      .get("/api/articles?order=invalid_query")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid order query");
       });
   });
 });
