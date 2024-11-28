@@ -323,7 +323,7 @@ describe("GET /api/users", () => {
 describe("GET /api/articles(sorting queries)", () => {
   test("200: Responds with articles sorted by a valid `sort_by` parameter", () => {
     return request(app)
-      .get("/api/articles?topic=valid_topic&sort_by=created_at")
+      .get("/api/articles?topic=mitch&sort_by=created_at")
       .expect(200)
       .then(({ body: { articles } }) => {
         expect(articles).toBeSortedBy("created_at", { descending: true });
@@ -366,7 +366,7 @@ describe("GET /api/articles(sorting queries)", () => {
   });
   test("200: Responds with an empty array if topic exists but has no articles", () => {
     return request(app)
-      .get("/api/articles?topic=topic_without_articles")
+      .get("/api/articles?topic=paper")
       .expect(200)
       .then(({ body: { articles } }) => {
         expect(articles).toBeInstanceOf(Array);
@@ -388,6 +388,14 @@ describe("GET /api/articles(sorting queries)", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid order query");
+      });
+  });
+  test("404: Responds with an error when topic does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=invalid_topic")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Topic not found");
       });
   });
 });

@@ -61,9 +61,19 @@ exports.selectAllArticles = (query) => {
   }
   queryString += ` 
   GROUP BY articles.article_id 
-  ORDER BY articles.created_at DESC;`;
+  ORDER BY ${sort_by} ${order};`;
 
   return db.query(queryString, queryValues).then(({ rows }) => {
+    if (!rows.length && topic) {
+      return db
+        .query(`SELECT * FROM topics WHERE slug = $1;`, [topic])
+        .then(({ rows: topicRows }) => {
+          if (!topicRows.length) {
+            return Promise.reject({ status: 404, msg: "Topic not found" });
+          }
+          return [];
+        });
+    }
     return rows;
   });
 };
