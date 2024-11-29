@@ -400,7 +400,7 @@ describe("GET /api/articles(sorting queries)", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id (comment_count)", () => {
+describe("GET /api/articles/:article_id (comment_count)", () => {
   test("200: Responds with an article that has a commment_count property", () => {
     return request(app)
       .get("/api/articles/1")
