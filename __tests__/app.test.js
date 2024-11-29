@@ -399,3 +399,16 @@ describe("GET /api/articles(sorting queries)", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id (comment_count)", () => {
+  test("200: Responds with an article that has a commment_count property", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toHaveProperty("comment_count");
+        expect(article.comment_count).toBeGreaterThanOrEqual(0);
+        expect(article.article_id).toBe(1);
+      });
+  });
+});

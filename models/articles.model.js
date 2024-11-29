@@ -1,7 +1,14 @@
 const db = require("../db/connection");
 
 exports.selectArticleById = (article_id) => {
-  const query = `SELECT * FROM articles WHERE article_id = $1`;
+  console.log("im here");
+  const query = `
+  SELECT articles.*,
+    COUNT(comments.article_id)::INT AS comment_count
+    FROM articles
+    LEFT JOIN comments ON articles.article_id = comments.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id;`;
   const idValue = [article_id];
   return db.query(query, idValue).then(({ rows }) => {
     if (!rows.length) {
