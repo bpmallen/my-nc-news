@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const { getApi } = require("./controllers/api.controller");
 const { getTopics } = require("./controllers/topics.controller");
@@ -15,6 +16,8 @@ const {
   handlePostgresErrors,
   handleCustomErrors,
 } = require("./errors/errors");
+
+app.use(cors());
 
 const app = express();
 
