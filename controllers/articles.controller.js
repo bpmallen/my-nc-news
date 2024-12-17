@@ -11,8 +11,7 @@ const {
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
-  const { inc_votes } = req.body;
-  console.log("Valur of inc_votes", inc_votes);
+
   selectArticleById(article_id)
     .then((article) => {
       res.status(200).send({ article });
@@ -58,6 +57,8 @@ exports.postComment = (req, res, next) => {
 exports.patchVotesByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
+
+  console.log("Value of inc_votes", inc_votes);
   if (!inc_votes) {
     return res.status(400).send({ msg: "Bad request" });
   }
