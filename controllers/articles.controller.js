@@ -51,7 +51,10 @@ exports.postComment = (req, res, next) => {
     .then((createdComment) => {
       res.status(201).send({ comment: createdComment });
     })
-    .catch(next);
+    .catch((err) => {
+      console.error("Error in addComment", err);
+      next(err);
+    });
 };
 
 exports.patchVotesByArticleId = (req, res, next) => {
