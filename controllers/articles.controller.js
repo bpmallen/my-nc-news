@@ -43,7 +43,7 @@ exports.getArticleComments = (req, res, next) => {
 exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
-
+  console.log(article_id, username, body);
   if (!username || !body) {
     return res.status(400).send({ msg: "Bad request" });
   }
