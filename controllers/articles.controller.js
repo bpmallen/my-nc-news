@@ -7,6 +7,7 @@ const {
   alterVotesByArticleId,
   removeCommentById,
   selectAllUsers,
+  selectArticlesByTopic,
 } = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {

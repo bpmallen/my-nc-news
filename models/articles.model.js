@@ -63,7 +63,7 @@ exports.selectAllArticles = (query) => {
     if (queryValues.length > 1) {
       queryString += ` AND articles.topic = $${queryValues.length}`;
     } else {
-      queryString += ` WHERE articles.topic = $${queryValues.length}`;
+      queryString += ` WHERE articles.topic = $1`;
     }
   }
   queryString += ` 
