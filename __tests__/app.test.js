@@ -90,7 +90,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/777")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not found");
+        expect(body.msg).toBe("Article Not found");
       });
   });
 });

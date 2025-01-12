@@ -12,7 +12,7 @@ exports.selectArticleById = (article_id) => {
   const idValue = [article_id];
   return db.query(query, idValue).then(({ rows }) => {
     if (!rows.length) {
-      return Promise.reject({ status: 404, msg: "Not found" });
+      return Promise.reject({ status: 404, msg: "Article Not found" });
     }
     return rows[0];
   });
