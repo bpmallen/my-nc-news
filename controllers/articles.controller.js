@@ -15,9 +15,6 @@ exports.getArticleById = (req, res, next) => {
 
   selectArticleById(article_id)
     .then((article) => {
-      if (!article) {
-        res.status(404).send({ msg: "Article not found" });
-      }
       res.status(200).send({ article });
     })
     .catch(next);

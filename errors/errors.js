@@ -17,5 +17,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
   if (err.status && err.msg) {
     console.log("im in the handleCustomErrors code block");
     res.status(err.status).send({ msg: err.msg });
+  } else {
+    next(err);
   }
 };
