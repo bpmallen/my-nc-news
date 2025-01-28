@@ -4,12 +4,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
 const db = require("../db/connection");
-const {
-  articleData,
-  commentData,
-  topicData,
-  userData,
-} = require("../db/data/test-data/index");
+
 /* Set up your test imports here */
 
 beforeEach(() => {
@@ -409,6 +404,32 @@ describe("GET /api/articles/:article_id (comment_count)", () => {
         expect(article).toHaveProperty("comment_count");
         expect(article.comment_count).toBeGreaterThanOrEqual(0);
         expect(article.article_id).toBe(1);
+      });
+  });
+});
+
+describe("GET /api/users/:username", () => {
+  test("200: responds with the requested user", () => {
+    return request(app)
+      .get("/api/users/butter_bridge") // Use a valid username from the test data
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user).toEqual(
+          expect.objectContaining({
+            username: "butter_bridge",
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          })
+        );
+      });
+  });
+
+  test("404: responds with an error if the user does not exist", () => {
+    return request(app)
+      .get("/api/users/nonexistentUsername")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
       });
   });
 });

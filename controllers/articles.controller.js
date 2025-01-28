@@ -51,7 +51,6 @@ exports.postComment = (req, res, next) => {
       res.status(201).send({ comment: createdComment });
     })
     .catch((err) => {
-      console.error("Error in addComment", err);
       next(err);
     });
 };
