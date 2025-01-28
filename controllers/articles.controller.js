@@ -6,8 +6,6 @@ const {
   addComment,
   alterVotesByArticleId,
   removeCommentById,
-  selectAllUsers,
-  selectArticlesByTopic,
 } = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {
@@ -62,7 +60,6 @@ exports.patchVotesByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
 
-  console.log("Value of inc_votes", inc_votes);
   if (!inc_votes) {
     return res.status(400).send({ msg: "Bad request" });
   }
@@ -78,14 +75,6 @@ exports.deleteCommentById = (req, res, next) => {
   removeCommentById(comment_id)
     .then(() => {
       res.status(204).send();
-    })
-    .catch(next);
-};
-
-exports.getUsers = (req, res, next) => {
-  selectAllUsers()
-    .then((users) => {
-      res.status(200).send({ users });
     })
     .catch(next);
 };
