@@ -158,9 +158,3 @@ exports.removeCommentById = (comment_id) => {
       }
     });
 };
-
-exports.selectAllUsers = () => {
-  return db.query(`SELECT * FROM users;`).then(({ rows }) => {
-    return rows;
-  });
-};
