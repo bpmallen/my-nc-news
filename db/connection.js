@@ -13,7 +13,12 @@ const config = {};
 
 if (ENV === "production") {
   config.connectionString = process.env.DATABASE_URL;
+  config.ssl = {
+    rejectUnauthorized: false,
+  };
   config.max = 2;
 }
+
+console.log("Database configuration:", config);
 
 module.exports = new Pool(config);
