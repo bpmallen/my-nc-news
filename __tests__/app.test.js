@@ -433,3 +433,66 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+describe("POST /api/articles", () => {
+  test("201: responds with the newly added article", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      title: "New Article",
+      body: "This is a new article.",
+      topic: "mitch",
+      article_img_url: "https://example.com/image.jpg",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            author: "butter_bridge",
+            title: "New Article",
+            body: "This is a new article.",
+            topic: "mitch",
+            article_img_url: "https://example.com/image.jpg",
+            article_id: expect.any(Number),
+            votes: 0,
+            created_at: expect.any(String),
+            comment_count: 0,
+          })
+        );
+      });
+  });
+
+  test("400: responds with an error if required fields are missing", () => {
+    const newArticle = {
+      title: "New Article",
+      body: "This is a new article.",
+      topic: "mitch",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+
+  test("404: responds with an error if the author does not exist", () => {
+    const newArticle = {
+      author: "nonexistent_user",
+      title: "New Article",
+      body: "This is a new article.",
+      topic: "mitch",
+      article_img_url: "https://example.com/image.jpg",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Username not found");
+      });
+  });
+});

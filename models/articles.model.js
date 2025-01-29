@@ -159,3 +159,30 @@ exports.removeCommentById = (comment_id) => {
       }
     });
 };
+
+exports.addArticle = (newArticle) => {
+  const { author, title, body, topic, article_img_url } = newArticle;
+
+  return db
+    .query(
+      `INSERT INTO articles (author, title, body, topic, article_img_url)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *;`,
+      [author, title, body, topic, article_img_url || "default_image_url"]
+    )
+    .then(({ rows }) => {
+      const article = rows[0];
+      return db
+        .query(
+          `SELECT articles.*, COUNT(comments.article_id)::INT AS comment_count
+           FROM articles
+           LEFT JOIN comments ON articles.article_id = comments.article_id
+           WHERE articles.article_id = $1
+           GROUP BY articles.article_id;`,
+          [article.article_id]
+        )
+        .then(({ rows }) => {
+          return rows[0];
+        });
+    });
+};

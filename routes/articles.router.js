@@ -6,7 +6,7 @@ const {
   getArticleComments,
   postComment,
   patchVotesByArticleId,
-  deleteCommentById,
+  postArticle,
 } = require("../controllers/articles.controller");
 
 const articlesRouter = express.Router();
@@ -16,5 +16,5 @@ articlesRouter.get("/:article_id", getArticleById);
 articlesRouter.get("/:article_id/comments", getArticleComments);
 articlesRouter.post("/:article_id/comments", postComment);
 articlesRouter.patch("/:article_id", patchVotesByArticleId);
-
+articlesRouter.post("/", postArticle);
 module.exports = articlesRouter;

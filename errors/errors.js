@@ -4,8 +4,14 @@ exports.routeNotFoundErrors = (req, res) => {
 
 exports.handlePostgresErrors = (err, req, res, next) => {
   // postgres errors
+
   if (err.code === "22P02") {
     res.status(400).send({ msg: "Bad request" });
+  } else if (
+    err.code === "23503" &&
+    err.constraint === "articles_author_fkey"
+  ) {
+    res.status(404).send({ msg: "Username not found" });
   } else {
     next(err);
   }
@@ -13,6 +19,7 @@ exports.handlePostgresErrors = (err, req, res, next) => {
 
 exports.handleCustomErrors = (err, req, res, next) => {
   // custom errors
+
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else {

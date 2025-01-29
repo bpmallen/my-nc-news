@@ -6,6 +6,7 @@ const {
   addComment,
   alterVotesByArticleId,
   removeCommentById,
+  addArticle,
 } = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {
@@ -76,4 +77,20 @@ exports.deleteCommentById = (req, res, next) => {
       res.status(204).send();
     })
     .catch(next);
+};
+
+exports.postArticle = (req, res, next) => {
+  const { author, title, body, topic, article_img_url } = req.body;
+
+  if (!author || !title || !body || !topic) {
+    return res.status(400).send({ msg: "Bad request" });
+  }
+
+  addArticle({ author, title, body, topic, article_img_url })
+    .then((article) => {
+      res.status(201).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
