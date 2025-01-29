@@ -19,6 +19,6 @@ if (ENV === "production") {
   config.max = 2;
 }
 
-console.log("Database configuration:", config);
+// console.log("Database configuration:", config);
 
 module.exports = new Pool(config);
