@@ -20,12 +20,15 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  selectAllArticles(req.query)
-    .then((articles) => {
-      res.status(200).send({ articles });
+  const { limit = 10, p = 1, ...query } = req.query;
+  selectAllArticles(query, limit, p)
+    .then(({ articles, total_count }) => {
+      res.status(200).send({ articles, total_count });
     })
 
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;

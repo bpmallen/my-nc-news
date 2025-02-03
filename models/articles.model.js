@@ -19,7 +19,7 @@ exports.selectArticleById = (article_id) => {
     });
 };
 
-exports.selectAllArticles = (query) => {
+exports.selectAllArticles = (query, limit = 10, p = 1) => {
   const { author, topic, sort_by = "created_at", order = "DESC" } = query;
 
   const validColumns = [
@@ -64,12 +64,16 @@ exports.selectAllArticles = (query) => {
     if (queryValues.length > 1) {
       queryString += ` AND articles.topic = $${queryValues.length}`;
     } else {
-      queryString += ` WHERE articles.topic = $1`;
+      queryString += ` WHERE articles.topic = $${queryValues.length}`;
     }
   }
+
   queryString += ` 
   GROUP BY articles.article_id 
-  ORDER BY ${sort_by} ${order};`;
+  ORDER BY ${sort_by} ${order}
+  LIMIT $${queryValues.length + 1} OFFSET $${queryValues.length + 2};`;
+
+  queryValues.push(limit, (p - 1) * limit);
 
   return db.query(queryString, queryValues).then(({ rows }) => {
     if (!rows.length && topic) {
@@ -79,10 +83,31 @@ exports.selectAllArticles = (query) => {
           if (!topicRows.length) {
             return Promise.reject({ status: 404, msg: "Topic not found" });
           }
-          return [];
+          return { articles: [], total_count: 0 };
         });
     }
-    return rows;
+
+    const countQueryValues = [];
+    let countQueryString = `SELECT COUNT(*)::INT AS total_count FROM articles`;
+
+    if (author) {
+      countQueryValues.push(author);
+      countQueryString += ` WHERE articles.author = $${countQueryValues.length}`;
+    }
+    if (topic) {
+      countQueryValues.push(topic);
+      if (countQueryValues.length > 1) {
+        countQueryString += ` AND articles.topic = $${countQueryValues.length}`;
+      } else {
+        countQueryString += ` WHERE articles.topic = $${countQueryValues.length}`;
+      }
+    }
+
+    return db
+      .query(countQueryString, countQueryValues)
+      .then(({ rows: countRows }) => {
+        return { articles: rows, total_count: countRows[0].total_count };
+      });
   });
 };
 

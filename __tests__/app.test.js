@@ -550,3 +550,66 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("GET /api/articles", () => {
+  test("200: responds with an array of articles, paginated", () => {
+    return request(app)
+      .get("/api/articles?limit=5&p=2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toHaveLength(5);
+        expect(body.total_count).toBeGreaterThan(5);
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+
+  test("200: responds with an array of articles, default limit", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toHaveLength(10);
+        expect(body.total_count).toBeGreaterThan(10);
+      });
+  });
+
+  test("400: responds with an error for invalid sort_by column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=invalid_column")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+
+  test("400: responds with an error for invalid order query", () => {
+    return request(app)
+      .get("/api/articles?order=invalid_order")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order query");
+      });
+  });
+
+  test("404: responds with an error when topic does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=nonexistent_topic")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic not found");
+      });
+  });
+});
