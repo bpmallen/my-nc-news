@@ -121,14 +121,16 @@ exports.checkArticleExists = (article_id) => {
     });
 };
 
-exports.selectArticleComments = (article_id) => {
+exports.selectArticleComments = (article_id, limit = 10, p = 1) => {
+  const offset = (p - 1) * limit;
   return db
     .query(
       `SELECT comment_id, votes, created_at, author,body, article_id
         FROM comments
         WHERE article_id = $1
-        ORDER BY created_at DESC;`,
-      [article_id]
+        ORDER BY created_at DESC
+        LIMIT $2 OFFSET $3;`,
+      [article_id, limit, offset]
     )
     .then(({ rows }) => {
       return rows;
