@@ -32,9 +32,10 @@ exports.getAllArticles = (req, res, next) => {
 };
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;
+  const { limit = 10, p = 1, ...query } = req.query;
   Promise.all([
     checkArticleExists(article_id),
-    selectArticleComments(article_id),
+    selectArticleComments(article_id, limit, p),
   ])
     .then(([, comments]) => {
       res.status(200).send({ comments });
