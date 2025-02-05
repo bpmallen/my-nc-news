@@ -5,8 +5,8 @@ const {
   checkArticleExists,
   addComment,
   alterVotesByArticleId,
-
   addArticle,
+  removeArticleById,
 } = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {
@@ -88,4 +88,13 @@ exports.postArticle = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.deleteArticleByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  removeArticleById(article_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(next);
 };
