@@ -20,8 +20,8 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  const { limit = 10, p = 1, ...query } = req.query;
-  selectAllArticles(query, limit, p)
+  const { limit = 10, page = 1, ...query } = req.query;
+  selectAllArticles(query, limit, page)
     .then(({ articles, total_count }) => {
       res.status(200).send({ articles, total_count });
     })
@@ -32,10 +32,10 @@ exports.getAllArticles = (req, res, next) => {
 };
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;
-  const { limit = 10, p = 1, ...query } = req.query;
+  const { limit = 10, page = 1, ...query } = req.query;
   Promise.all([
     checkArticleExists(article_id),
-    selectArticleComments(article_id, limit, p),
+    selectArticleComments(article_id, limit, page),
   ])
     .then(([, comments]) => {
       res.status(200).send({ comments });

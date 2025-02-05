@@ -19,7 +19,7 @@ exports.selectArticleById = (article_id) => {
     });
 };
 
-exports.selectAllArticles = (query, limit = 10, p = 1) => {
+exports.selectAllArticles = (query, limit = 10, page = 1) => {
   const { author, topic, sort_by = "created_at", order = "DESC" } = query;
 
   const validColumns = [
@@ -73,7 +73,7 @@ exports.selectAllArticles = (query, limit = 10, p = 1) => {
   ORDER BY ${sort_by} ${order}
   LIMIT $${queryValues.length + 1} OFFSET $${queryValues.length + 2};`;
 
-  queryValues.push(limit, (p - 1) * limit);
+  queryValues.push(limit, (page - 1) * limit);
 
   return db.query(queryString, queryValues).then(({ rows }) => {
     if (!rows.length && topic) {
@@ -121,8 +121,8 @@ exports.checkArticleExists = (article_id) => {
     });
 };
 
-exports.selectArticleComments = (article_id, limit = 10, p = 1) => {
-  const offset = (p - 1) * limit;
+exports.selectArticleComments = (article_id, limit = 10, page = 1) => {
+  const offset = (page - 1) * limit;
   return db
     .query(
       `SELECT comment_id, votes, created_at, author,body, article_id

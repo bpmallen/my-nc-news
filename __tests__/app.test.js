@@ -554,7 +554,7 @@ describe("PATCH /api/comments/:comment_id", () => {
 describe("GET /api/articles", () => {
   test("200: responds with an array of articles, paginated", () => {
     return request(app)
-      .get("/api/articles?limit=5&p=2")
+      .get("/api/articles?limit=5&page=2")
       .expect(200)
       .then(({ body }) => {
         expect(body.articles).toHaveLength(5);
@@ -617,7 +617,7 @@ describe("GET /api/articles", () => {
 describe("/api/articles/:article_id/comments", () => {
   test("200: responds with paginated comments for the article", () => {
     return request(app)
-      .get("/api/articles/1/comments?limit=5&p=2")
+      .get("/api/articles/1/comments?limit=5&page=2")
       .expect(200)
       .then(({ body }) => {
         expect(body.comments).toHaveLength(5);
@@ -638,7 +638,7 @@ describe("/api/articles/:article_id/comments", () => {
 
   test("200: responds with an empty array if there are no comments on the specified page", () => {
     return request(app)
-      .get("/api/articles/1/comments?limit=5&p=100")
+      .get("/api/articles/1/comments?limit=5&page=100")
       .expect(200)
       .then(({ body }) => {
         expect(body.comments).toEqual([]);
@@ -647,7 +647,7 @@ describe("/api/articles/:article_id/comments", () => {
 
   test("400: responds with an error for invalid limit or page", () => {
     return request(app)
-      .get("/api/articles/1/comments?limit=invalid&p=invalid")
+      .get("/api/articles/1/comments?limit=invalid&page=invalid")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
