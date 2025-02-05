@@ -663,3 +663,36 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/topics", () => {
+  test("201: Responds with a newly created topic object", () => {
+    const newTopic = {
+      slug: "lightsabers",
+      description: "Only the worthy can wield such a weapon...",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.topic).toEqual(
+          expect.objectContaining({
+            slug: "lightsabers",
+            description: "Only the worthy can wield such a weapon...",
+          })
+        );
+      });
+  });
+  test("POST /api/topics: 400 - responds with an error when required fields are missing", () => {
+    const invalidTopic = {
+      slug: "incomplete-topic",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(invalidTopic)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
