@@ -7,14 +7,22 @@ const {
   postComment,
   patchVotesByArticleId,
   postArticle,
+  deleteArticleByArticleId,
 } = require("../controllers/articles.controller");
 
 const articlesRouter = express.Router();
 
-articlesRouter.get("/", getAllArticles);
-articlesRouter.get("/:article_id", getArticleById);
-articlesRouter.get("/:article_id/comments", getArticleComments);
-articlesRouter.post("/:article_id/comments", postComment);
-articlesRouter.patch("/:article_id", patchVotesByArticleId);
-articlesRouter.post("/", postArticle);
+articlesRouter.route("/").get(getAllArticles).post(postArticle);
+
+articlesRouter
+  .route("/:article_id")
+  .get(getArticleById)
+  .patch(patchVotesByArticleId)
+  .delete(deleteArticleByArticleId);
+
+articlesRouter
+  .route("/:article_id/comments")
+  .get(getArticleComments)
+  .post(postComment);
+
 module.exports = articlesRouter;

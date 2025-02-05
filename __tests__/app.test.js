@@ -696,3 +696,23 @@ describe("POST /api/topics", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("DELETE /api/articles/:article_id: 204 - deletes the article and its comments", () => {
+    return request(app)
+      .delete("/api/articles/1")
+      .expect(204)
+      .then(() => {
+        return request(app).get("/api/articles/1").expect(404);
+      });
+  });
+
+  test("DELETE /api/articles/:article_id: 404 - responds with an error if the article does not exist", () => {
+    return request(app)
+      .delete("/api/articles/9999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+});
