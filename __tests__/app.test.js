@@ -5,8 +5,6 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 
-/* Set up your test imports here */
-
 beforeEach(() => {
   return seed(testData);
 });
@@ -14,8 +12,6 @@ beforeEach(() => {
 afterAll(() => {
   return db.end();
 });
-
-/* Set up your beforeEach & afterAll functions here */
 
 describe("GET /api", () => {
   test("200: Responds with an object detailing the documentation for each endpoint", () => {
@@ -411,7 +407,7 @@ describe("GET /api/articles/:article_id (comment_count)", () => {
 describe("GET /api/users/:username", () => {
   test("200: responds with the requested user", () => {
     return request(app)
-      .get("/api/users/butter_bridge") // Use a valid username from the test data
+      .get("/api/users/butter_bridge")
       .expect(200)
       .then(({ body }) => {
         expect(body.user).toEqual(
